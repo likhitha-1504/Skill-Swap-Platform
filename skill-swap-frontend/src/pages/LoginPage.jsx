@@ -93,8 +93,11 @@ const LoginPage = () => {
       
       if (result.success) {
         toast.success('Welcome back! 🎉');
-        const from = location.state?.from?.pathname || '/dashboard';
-        navigate(from, { replace: true });
+        // Force a small delay to ensure auth state is updated
+        setTimeout(() => {
+          const from = location.state?.from?.pathname || '/dashboard';
+          navigate(from, { replace: true });
+        }, 100);
       } else {
         toast.error(result.error || 'Login failed');
       }

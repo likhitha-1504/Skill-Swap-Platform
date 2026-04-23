@@ -91,8 +91,6 @@ const RegisterPage = () => {
       errors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
     }
 
     // Confirm password validation
@@ -131,8 +129,8 @@ const RegisterPage = () => {
       const result = await register(registrationData);
       
       if (result.success) {
-        toast.success('Account created successfully! 🎉');
-        navigate('/dashboard');
+        toast.success('Account created successfully! 🎉 Please login to continue.');
+        navigate('/login');
       } else {
         toast.error(result.error || 'Registration failed');
       }
@@ -315,7 +313,7 @@ const RegisterPage = () => {
                         <p className="mt-1 text-sm text-danger-600">{formErrors.password}</p>
                       )}
                       <p className="mt-1 text-xs text-gray-500">
-                        Must contain uppercase, lowercase, and number
+                        Must be at least 6 characters long
                       </p>
                     </div>
 

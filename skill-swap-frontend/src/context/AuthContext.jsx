@@ -121,14 +121,24 @@ export const AuthProvider = ({ children }) => {
 
       try {
         dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
-        const response = await authAPI.getProfile();
+        
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), 5000)
+        );
+        
+        const response = await Promise.race([
+          authAPI.getProfile(),
+          timeoutPromise
+        ]);
+        
         dispatch({ type: AUTH_ACTIONS.LOAD_USER_SUCCESS, payload: response.data });
       } catch (error) {
         console.error('Error loading user:', error);
         localStorage.removeItem('token');
         dispatch({ 
           type: AUTH_ACTIONS.LOAD_USER_FAILURE, 
-          payload: error.response?.data?.message || 'Failed to load user' 
+          payload: error.response?.data?.message || error.message || 'Failed to load user' 
         });
       }
     };
